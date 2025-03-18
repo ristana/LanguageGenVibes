@@ -1,0 +1,14 @@
+graph TD
+    A[Client] --> B[API Layer]
+    B --> C[Business Logic Layer]
+    C --> D[Data Access Layer]
+    D --> E[(Database)]
+    
+    subgraph Core Components
+    B
+    C
+    D
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px 

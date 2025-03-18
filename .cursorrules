@@ -1,0 +1,20 @@
+# AI Behavior Configuration
+# This file configures how AI tools like Cursor should behave in this project
+
+# Code Style
+language: python
+style_guide: pep8
+max_line_length: 88  # Black formatter default
+
+# Documentation
+doc_style: google  # Use Google style docstrings
+generate_docstrings: true
+
+# Testing
+test_framework: pytest
+generate_tests: true
+
+# Code Generation
+type_hints: true
+error_handling: true
+logging: true 
