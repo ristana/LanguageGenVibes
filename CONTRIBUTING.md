@@ -1,5 +1,40 @@
 # Contributing to LanguageGenVibes
 
+## Quick Reference
+
+### Common Git Commands
+```bash
+# Check status
+git status
+
+# Pull latest changes
+git pull origin main
+
+# Create and switch to new branch
+git checkout -b feature/new-feature
+
+# Discard local changes
+git checkout -- .
+
+# View commit history
+git log --oneline
+
+# Update remote URL if needed
+git remote set-url origin https://github.com/ristana/LanguageGenVibes.git
+```
+
+### Common Issues & Solutions
+
+1. **Git not found**: Make sure Git is installed and in your PATH
+2. **Permission denied**: Check your GitHub credentials
+3. **Merge conflicts**: 
+   ```bash
+   git status  # See conflicting files
+   # Edit files to resolve conflicts
+   git add .
+   git commit -m "Resolve merge conflicts"
+   ```
+
 ## Development Setup
 
 1. Clone the repository:
