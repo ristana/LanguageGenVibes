@@ -1,5 +1,6 @@
-"""
-LanguageGenVibes - English to fictional language translator.
-"""
+"""Language translation package."""
 
-__version__ = "0.1.0" 
+from .languages import LANGUAGE_TRANSFORMERS
+
+__version__ = '0.1.0'
+__all__ = ['LANGUAGE_TRANSFORMERS'] 

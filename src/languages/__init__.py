@@ -1,29 +1,13 @@
-"""
-Language definitions and transformations.
-"""
+"""Language transformers package."""
 
-from .phonetics import PhoneticTransformer, get_example_transformations
-from .vybix import (EXAMPLE_WORDS, LETTER_COMBINATIONS, NUMBERS,
-                   PHONETIC_MAPPING, SPECIAL_RULES, VOWEL_HARMONY_EXAMPLES,
-                   WORD_ENDINGS)
 from .elvish import ElvishTransformer
+from .lizard import LizardTransformer
+from .vybix import VybixTransformer
 
-__all__ = [
-    'PhoneticTransformer',
-    'get_example_transformations',
-    'EXAMPLE_WORDS',
-    'LETTER_COMBINATIONS',
-    'NUMBERS',
-    'PHONETIC_MAPPING',
-    'SPECIAL_RULES',
-    'VOWEL_HARMONY_EXAMPLES',
-    'WORD_ENDINGS',
-    'VybixTransformer',
-    'ElvishTransformer',
-]
-
-# Available language transformers
 LANGUAGE_TRANSFORMERS = {
-    'vybix': VybixTransformer,
     'elvish': ElvishTransformer,
-} 
+    'vybix': VybixTransformer,
+    'lizard': LizardTransformer,
+}
+
+__all__ = ['LANGUAGE_TRANSFORMERS'] 

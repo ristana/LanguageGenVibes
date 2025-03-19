@@ -4,72 +4,63 @@ Command-line interface for the language translator.
 import click
 from rich.console import Console
 from rich.panel import Panel
-from rich.layout import Layout
 from rich.text import Text
-from src.languages.phonetics import PhoneticTransformer
 
-from .translator import DEFAULT_RULES, Translator
-from .languages import get_example_transformations
+from .languages import LANGUAGE_TRANSFORMERS
 
 console = Console()
-
 
 @click.group()
 def cli():
     """CLI for the language translation tool."""
     pass
 
-
 @cli.command()
 @click.argument('text')
-def translate(text: str) -> None:
-    """Translate English text to Vybix."""
-    transformer = PhoneticTransformer()
+@click.option('--language', '-l', default='elvish', help='Target language (elvish or vybix)')
+def translate(text: str, language: str) -> None:
+    """Translate English text to the target language."""
+    if language not in LANGUAGE_TRANSFORMERS:
+        console.print(f"[red]Error: Unknown language '{language}'. Available languages: {', '.join(LANGUAGE_TRANSFORMERS.keys())}[/red]")
+        return
+
     try:
-        vybix_text = transformer.transform(text)
+        # Create transformer for the selected language
+        transformer_class = LANGUAGE_TRANSFORMERS[language]
+        transformer = transformer_class()
+        
+        # Transform the text
+        transformed_text = transformer.transform(text)
+        
+        # Display results
         result = Text()
         result.append("English: ", style="blue bold")
         result.append(text)
-        result.append("\nVybix: ", style="green bold")
-        result.append(vybix_text)
+        result.append(f"\n{language.title()}: ", style="green bold")
+        result.append(transformed_text)
+        
+        # Try to reverse transform
+        reversed_text = transformer.reverse_transform(transformed_text)
+        result.append("\nReversed: ", style="yellow bold")
+        result.append(reversed_text)
+        
         console.print(Panel(result, title="Translation Result", expand=True))
     except Exception as e:
         console.print(f"[red]Error during translation: {str(e)}[/red]")
 
-
 @cli.command()
-def list_rules():
-    """List all available translation rules."""
-    # Create a formatted list of rules
-    rules_text = "\n".join(
-        f"[blue]{english}[/blue] → [green]{translated}[/green]"
-        for english, translated in sorted(DEFAULT_RULES.items())
+def list_languages():
+    """List all available languages."""
+    languages_text = "\n".join(
+        f"[blue]{lang}[/blue]"
+        for lang in sorted(LANGUAGE_TRANSFORMERS.keys())
     )
     
     console.print(Panel.fit(
-        rules_text,
-        title="Available Translations",
+        languages_text,
+        title="Available Languages",
         border_style="bright_blue"
     ))
-
-
-@cli.command()
-def examples():
-    """Show example translations demonstrating the language features."""
-    examples = get_example_transformations()
-    
-    # Create a formatted list of examples
-    examples_text = "\n".join(
-        f"[blue]{eng}[/blue]\n→ [yellow]{ipa}[/yellow]\n→ [green]{vyb}[/green]\n"
-        for eng, ipa, vyb in examples
-    )
-    
-    console.print(Panel.fit(
-        examples_text,
-        title="Example Translations",
-        border_style="bright_blue"
-    ))
-
 
 if __name__ == '__main__':
     cli() 
