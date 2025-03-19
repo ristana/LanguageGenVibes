@@ -1,11 +1,16 @@
 # LanguageGenVibes
 
-A fun Python application that translates English text into fictional languages. Convert your boring regular text into something more interesting!
+A fun Python application that translates English text into fictional languages, featuring a modern GUI with dynamic background textures that change based on the selected language. Convert your boring regular text into something more interesting!
 
 ## Features
 
 - Convert English words to fictional language equivalents
-- Modern GUI interface with real-time translation
+- Modern GUI interface with:
+  - Real-time translation
+  - Dynamic background textures for each language
+  - Semi-transparent chat boxes
+  - Themed buttons and controls
+  - Copy and clear functionality
 - Easy to extend with new translations
 - Preserves text formatting and punctuation
 - Case-insensitive matching
@@ -20,11 +25,13 @@ A fun Python application that translates English text into fictional languages. 
 
 ## Example Usage
 
-The application provides a graphical interface where you can:
+The application provides a stylish graphical interface where you can:
 1. Select your desired fictional language from the dropdown
-2. Enter your English text in the input field
-3. See the translation update in real-time
-4. View the translation history for all languages
+2. Watch as the background texture changes to match the selected language
+3. Enter your English text in the semi-transparent input field
+4. See the translation update in real-time
+5. View the translation history with a themed display
+6. Copy translations to clipboard or clear history as needed
 
 ## Project Structure
 
@@ -44,9 +51,16 @@ project-root/
 │       ├── insectoid.py # Insectoid language
 │       ├── celestial.py # Celestial language
 │       └── necrotic.py # Necrotic language
-├── tests/              # Test files
+├── assets/            # Graphical assets
+│   ├── CyberneticBinary.png
+│   ├── DwarvishRunic.png
+│   ├── AlienInsectoid.png
+│   ├── EtherealCelestial.png
+│   ├── NecroticUndead.png
+│   └── icon.ico
+├── tests/            # Test files
 │   └── test_languages.py  # Comprehensive test suite
-└── README.md          # This file
+└── README.md        # This file
 ```
 
 ## Quick Start
@@ -84,6 +98,7 @@ To add a new language transformer:
 3. Define the language's character mappings in `__init__`
 4. Implement the `transform` and `reverse_transform` methods
 5. Add the language to `LANGUAGE_TRANSFORMERS` in `src/languages/__init__.py`
+6. Add a background texture in `assets/` (optional)
 
 Example:
 ```python
@@ -101,13 +116,35 @@ class MyLanguageTransformer(BaseTransformer):
     def transform(self, text: str) -> str:
         """Transform text into your language."""
         result = text.lower()
-        # Apply your transformations
+        # Apply consonant mappings
+        for eng, my_list in self.consonant_mappings.items():
+            result = result.replace(eng, random.choice(my_list))
+        # Apply vowel mappings
+        for eng, my_list in self.vowel_mappings.items():
+            result = result.replace(eng, random.choice(my_list))
+        # Add prefix and suffix
+        if result:
+            result = random.choice(self.prefixes) + result + random.choice(self.suffixes)
         return result
 
     def reverse_transform(self, text: str) -> str:
         """Transform back to English."""
         result = text.lower()
-        # Apply reverse transformations
+        # Remove prefixes and suffixes
+        for prefix in self.prefixes:
+            if result.startswith(prefix):
+                result = result[len(prefix):]
+        for suffix in self.suffixes:
+            if result.endswith(suffix):
+                result = result[:-len(suffix)]
+        # Reverse consonant mappings
+        for eng, my_list in self.consonant_mappings.items():
+            for my in my_list:
+                result = result.replace(my, eng)
+        # Reverse vowel mappings
+        for eng, my_list in self.vowel_mappings.items():
+            for my in my_list:
+                result = result.replace(my, eng)
         return result
 ```
 
@@ -128,6 +165,21 @@ Run the tests with:
 ```bash
 pytest tests/
 ```
+
+### Styling
+
+The application uses a themed UI with:
+- Dynamic background textures for each language
+- Semi-transparent chat boxes (rgba(128, 128, 128, 180))
+- Light grey buttons and dropdown (#D3D3D3)
+- White text for better contrast
+- Rounded corners and borders
+- Hover and pressed states for buttons
+
+To add styling for a new language:
+1. Add a background texture to `assets/`
+2. Update the texture mapping in `gui.py`
+3. Ensure the texture scales well at different resolutions
 
 ## Contributing
 
