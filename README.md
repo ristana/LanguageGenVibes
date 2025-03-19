@@ -5,30 +5,26 @@ A fun Python application that translates English text into fictional languages. 
 ## Features
 
 - Convert English words to fictional language equivalents
-- Command-line interface with beautiful output
+- Modern GUI interface with real-time translation
 - Easy to extend with new translations
 - Preserves text formatting and punctuation
 - Case-insensitive matching
-- Comprehensive test suite with pre-commit hooks
+- Comprehensive test suite
 - Multiple fictional languages:
-  - Vybix (Modern internet slang)
-  - Elvish (Elegant and flowing)
-  - Lizard (Hiss-like patterns)
-  - Cybernetic Binary (Futuristic binary patterns)
-  - Dwarvish Runic (Angular rune-like symbols)
-  - Alien Insectoid (Chittering patterns)
-  - Ethereal Celestial (Flowing celestial symbols)
-  - Necrotic Undead (Decayed-looking text)
+  - Elvish (Elegant and flowing script with accented vowels)
+  - Cybernetic Binary (Futuristic binary and hex patterns with circuit symbols)
+  - Dwarvish Runic (Angular rune-like symbols with Norse influence)
+  - Alien Insectoid (Chittering patterns with insect-like sounds)
+  - Ethereal Celestial (Flowing celestial symbols with divine patterns)
+  - Necrotic Undead (Decayed-looking text with irregular symbols)
 
-## Example
+## Example Usage
 
-```bash
-$ python -m src translate "Hello my friend, how are you?" --language vybix
-╭─── Translation Result ────╮
-│ English: Hello my friend, how are you? │
-│ Translated: henlo my fren, how r u?    │
-╰──────────────────────────╯
-```
+The application provides a graphical interface where you can:
+1. Select your desired fictional language from the dropdown
+2. Enter your English text in the input field
+3. See the translation update in real-time
+4. View the translation history for all languages
 
 ## Project Structure
 
@@ -38,29 +34,26 @@ project-root/
 │   ├── __init__.py      # Package initialization
 │   ├── __main__.py      # Entry point
 │   ├── translator.py    # Core translation logic
-│   ├── cli.py          # Command-line interface
+│   ├── gui.py          # Graphical user interface
 │   └── languages/      # Language transformers
 │       ├── __init__.py
-│       ├── base.py
-│       ├── vybix.py
-│       ├── elvish.py
-│       ├── lizard.py
-│       ├── cybernetic.py
-│       ├── dwarven.py
-│       ├── insectoid.py
-│       ├── celestial.py
-│       └── necrotic.py
+│       ├── base.py     # Base transformer class
+│       ├── elvish.py   # Elvish language
+│       ├── cybernetic.py # Cybernetic language
+│       ├── dwarvish.py # Dwarvish language
+│       ├── insectoid.py # Insectoid language
+│       ├── celestial.py # Celestial language
+│       └── necrotic.py # Necrotic language
 ├── tests/              # Test files
 │   └── test_languages.py  # Comprehensive test suite
-├── docs/              # Documentation
-└── INTERNAL_NOTES.md  # Development guidelines
+└── README.md          # This file
 ```
 
 ## Quick Start
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ristana/LanguageGenVibes.git
+   git clone https://github.com/yourusername/LanguageGenVibes.git
    cd LanguageGenVibes
    ```
 
@@ -70,67 +63,81 @@ project-root/
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies and set up pre-commit hooks:
+3. Install dependencies:
    ```bash
-   ./setup.sh  # On Windows: python setup.py
+   pip install -r requirements.txt
    ```
 
-## Usage
-
-1. Translate text:
+4. Run the application:
    ```bash
-   python -m src translate "Hello friend" --language vybix
-   ```
-
-2. List available languages:
-   ```bash
-   python -m src list-languages
+   python -m src
    ```
 
 ## Development
 
-- Follow PEP 8 style guide
-- Add type hints to all new code
-- Write tests for new features
-- Update documentation as needed
-- Run tests before committing changes
-- See INTERNAL_NOTES.md for detailed guidelines
+### Adding a New Language
 
-## Testing
+To add a new language transformer:
 
-The project includes a comprehensive test suite that covers:
-- All language transformers
-- Various text input types
-- Edge cases and special characters
-- Unicode handling
-- Whitespace handling
-- Case sensitivity
+1. Create a new file in `src/languages/` (e.g., `mylanguage.py`)
+2. Implement a class that inherits from `BaseTransformer`
+3. Define the language's character mappings in `__init__`
+4. Implement the `transform` and `reverse_transform` methods
+5. Add the language to `LANGUAGE_TRANSFORMERS` in `src/languages/__init__.py`
+
+Example:
+```python
+from .base import BaseTransformer
+
+class MyLanguageTransformer(BaseTransformer):
+    def __init__(self):
+        """Initialize the transformer."""
+        self.consonant_mappings = {...}  # Define consonant mappings
+        self.vowel_mappings = {...}      # Define vowel mappings
+        self.prefixes = [...]            # Optional prefixes
+        self.suffixes = [...]            # Optional suffixes
+        self.word_symbols = [...]        # Optional word separators
+
+    def transform(self, text: str) -> str:
+        """Transform text into your language."""
+        result = text.lower()
+        # Apply your transformations
+        return result
+
+    def reverse_transform(self, text: str) -> str:
+        """Transform back to English."""
+        result = text.lower()
+        # Apply reverse transformations
+        return result
+```
+
+### Testing
+
+The project includes a comprehensive test suite that verifies:
+- Basic transformation and reverse transformation
 - Empty input handling
-- Repeated characters
+- Special character handling
+- Unicode character support
+- Whitespace preservation
+- Case sensitivity
+- Repeated character handling
+- Prefix and suffix handling
+- Consonant and vowel mappings
 
-Run tests with:
+Run the tests with:
 ```bash
-# Run all tests
 pytest tests/
-
-# Run tests with coverage report
-pytest --cov=src tests/
-
-# Run specific test file
-pytest tests/test_languages.py
 ```
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Add your language transformer to `src/languages/`
-4. Add tests for your transformer in `tests/test_languages.py`
-5. Run the test suite to ensure everything passes
-6. Commit your changes (`git commit -m 'Add new language transformer'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the LICENSE file for details. 
