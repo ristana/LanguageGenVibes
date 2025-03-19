@@ -104,3 +104,140 @@ pytest tests/test_languages.py
 - Caching of transformation rules
 - Optimized regex patterns
 - Memory-efficient processing of large texts 
+
+## Translation System
+
+### Core Components
+
+1. **Translator Class**
+- Main interface for translation operations
+- Manages language transformer instances
+- Provides both forward and reverse translation capabilities
+- Thread-safe implementation
+
+2. **BaseTransformer Class**
+- Abstract base class for all language transformers
+- Defines required interface methods:
+  - `transform(text: str) -> str`
+  - `reverse_transform(text: str) -> str`
+- Provides common utility methods
+
+3. **Language Transformers**
+Each language transformer implements:
+- Character mappings (consonants, vowels)
+- Special character handling
+- Bidirectional translation logic
+- Language-specific formatting
+
+### Translation Process
+
+1. **Forward Translation (English to Fictional)**
+```python
+def translate(self, text: str, language: str) -> str:
+    """
+    1. Validate language selection
+    2. Get appropriate transformer
+    3. Apply transformation rules
+    4. Return translated text
+    """
+```
+
+2. **Reverse Translation (Fictional to English)**
+```python
+def reverse_translate(self, text: str, language: str) -> str:
+    """
+    1. Validate language selection
+    2. Get appropriate transformer
+    3. Apply reverse transformation rules
+    4. Return original English text
+    """
+```
+
+## GUI System
+
+### Components
+
+1. **Main Window**
+- Language selection dropdown with custom styling
+- Dynamic background textures
+- Semi-transparent input/output areas
+- Translation history display
+
+2. **Controls**
+- Translate button
+- Untranslate button
+- Copy history button
+- Clear button
+
+3. **Asset Management**
+- Background textures for each language
+- Custom dropdown arrow
+- Application icon
+
+### Event Handling
+
+1. **Translation Events**
+- Real-time input validation
+- Error handling and user feedback
+- History management
+- Background updates
+
+2. **UI Updates**
+- Dynamic texture loading
+- Theme consistency
+- Responsive layout
+
+## Build System
+
+### Development Build
+- Python environment setup
+- Dependency management
+- Test execution
+
+### Production Build
+1. **PyInstaller Configuration**
+- Single-file executable
+- Asset bundling
+- Icon integration
+- Version information
+
+2. **Release Process**
+- Version tagging
+- Asset compression
+- Distribution packaging
+
+## Testing Framework
+
+### Unit Tests
+- Individual transformer tests
+- Core functionality verification
+- Edge case handling
+
+### Integration Tests
+- Full translation pipeline
+- GUI functionality
+- Asset loading
+
+### Test Categories
+1. **Translation Tests**
+- Basic transformation
+- Reverse transformation
+- Character mapping
+- Special cases
+
+2. **GUI Tests**
+- Event handling
+- Asset loading
+- State management
+
+## Performance Considerations
+
+1. **Memory Management**
+- Efficient texture loading
+- History size limits
+- Resource cleanup
+
+2. **Processing Optimization**
+- Cached transformers
+- Efficient string operations
+- Background processing for long operations 

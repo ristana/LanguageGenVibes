@@ -5,12 +5,14 @@ A fun Python application that translates English text into fictional languages, 
 ## Features
 
 - Convert English words to fictional language equivalents
+- Reverse translation back to English
 - Modern GUI interface with:
   - Real-time translation
   - Dynamic background textures for each language
   - Semi-transparent chat boxes
   - Themed buttons and controls
   - Copy and clear functionality
+  - Language-specific dropdown styling
 - Easy to extend with new translations
 - Preserves text formatting and punctuation
 - Case-insensitive matching
@@ -23,15 +25,26 @@ A fun Python application that translates English text into fictional languages, 
   - Ethereal Celestial (Flowing celestial symbols with divine patterns)
   - Necrotic Undead (Decayed-looking text with irregular symbols)
 
+## Installation
+
+### Option 1: Download the Release (Recommended)
+1. Go to the [Releases page](https://github.com/yourusername/LanguageGenVibes/releases)
+2. Download the latest release (FictionalTranslator.zip)
+3. Extract the ZIP file
+4. Run FictionalTranslator.exe
+
+### Option 2: Build from Source
+
 ## Example Usage
 
 The application provides a stylish graphical interface where you can:
 1. Select your desired fictional language from the dropdown
 2. Watch as the background texture changes to match the selected language
 3. Enter your English text in the semi-transparent input field
-4. See the translation update in real-time
-5. View the translation history with a themed display
-6. Copy translations to clipboard or clear history as needed
+4. Click "Translate" to convert to the selected language
+5. Use "Untranslate" to convert back to English
+6. View the translation history with a themed display
+7. Copy translations to clipboard or clear history as needed
 
 ## Project Structure
 
