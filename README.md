@@ -9,11 +9,21 @@ A fun Python application that translates English text into fictional languages. 
 - Easy to extend with new translations
 - Preserves text formatting and punctuation
 - Case-insensitive matching
+- Comprehensive test suite with pre-commit hooks
+- Multiple fictional languages:
+  - Vybix (Modern internet slang)
+  - Elvish (Elegant and flowing)
+  - Lizard (Hiss-like patterns)
+  - Cybernetic Binary (Futuristic binary patterns)
+  - Dwarvish Runic (Angular rune-like symbols)
+  - Alien Insectoid (Chittering patterns)
+  - Ethereal Celestial (Flowing celestial symbols)
+  - Necrotic Undead (Decayed-looking text)
 
 ## Example
 
 ```bash
-$ python -m src translate "Hello my friend, how are you?"
+$ python -m src translate "Hello my friend, how are you?" --language vybix
 ╭─── Translation Result ────╮
 │ English: Hello my friend, how are you? │
 │ Translated: henlo my fren, how r u?    │
@@ -28,9 +38,22 @@ project-root/
 │   ├── __init__.py      # Package initialization
 │   ├── __main__.py      # Entry point
 │   ├── translator.py    # Core translation logic
-│   └── cli.py          # Command-line interface
+│   ├── cli.py          # Command-line interface
+│   └── languages/      # Language transformers
+│       ├── __init__.py
+│       ├── base.py
+│       ├── vybix.py
+│       ├── elvish.py
+│       ├── lizard.py
+│       ├── cybernetic.py
+│       ├── dwarven.py
+│       ├── insectoid.py
+│       ├── celestial.py
+│       └── necrotic.py
 ├── tests/              # Test files
-└── docs/              # Documentation
+│   └── test_languages.py  # Comprehensive test suite
+├── docs/              # Documentation
+└── INTERNAL_NOTES.md  # Development guidelines
 ```
 
 ## Quick Start
@@ -47,21 +70,21 @@ project-root/
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies:
+3. Install dependencies and set up pre-commit hooks:
    ```bash
-   pip install -r requirements.txt
+   ./setup.sh  # On Windows: python setup.py
    ```
 
 ## Usage
 
 1. Translate text:
    ```bash
-   python -m src translate "Hello friend"
+   python -m src translate "Hello friend" --language vybix
    ```
 
-2. List available translations:
+2. List available languages:
    ```bash
-   python -m src list-rules
+   python -m src list-languages
    ```
 
 ## Development
@@ -70,22 +93,43 @@ project-root/
 - Add type hints to all new code
 - Write tests for new features
 - Update documentation as needed
+- Run tests before committing changes
+- See INTERNAL_NOTES.md for detailed guidelines
 
 ## Testing
 
-Run tests with pytest:
+The project includes a comprehensive test suite that covers:
+- All language transformers
+- Various text input types
+- Edge cases and special characters
+- Unicode handling
+- Whitespace handling
+- Case sensitivity
+- Empty input handling
+- Repeated characters
+
+Run tests with:
 ```bash
-pytest
+# Run all tests
+pytest tests/
+
+# Run tests with coverage report
+pytest --cov=src tests/
+
+# Run specific test file
+pytest tests/test_languages.py
 ```
 
 ## Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Add your translations to `src/translator.py`
-4. Commit your changes (`git commit -m 'Add new translations'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+3. Add your language transformer to `src/languages/`
+4. Add tests for your transformer in `tests/test_languages.py`
+5. Run the test suite to ensure everything passes
+6. Commit your changes (`git commit -m 'Add new language transformer'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
 
 ## License
 
