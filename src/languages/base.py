@@ -22,37 +22,25 @@ class BaseTransformer(ABC):
         self.particles: List[str] = []
 
     @abstractmethod
-    def _setup_transformations(self) -> None:
-        """Set up the transformation rules for the language.
-        
-        This method should be implemented by subclasses to define their specific
-        transformation rules.
-        """
-        pass
-
-    @abstractmethod
     def transform(self, text: str) -> str:
         """Transform text from English to the target language.
         
         Args:
-            text: The English text to transform.
+            text: The English text to transform
             
         Returns:
-            The transformed text in the target language.
+            The transformed text in the target language
         """
         pass
 
     @abstractmethod
     def reverse_transform(self, text: str) -> str:
-        """Attempt to reverse transform text back to English.
-        
-        Note: This may be an approximate reverse transformation due to the
-        complexity of the transformations.
+        """Transform text from the target language back to English.
         
         Args:
-            text: The text in the target language to reverse transform.
+            text: The text in the target language
             
         Returns:
-            An approximate English text.
+            The transformed text in English
         """
         pass 

@@ -5,7 +5,7 @@ from typing import Dict, Optional
 
 from pydantic import BaseModel
 
-from .languages.phonetics import PhoneticTransformer
+from .languages import LANGUAGE_TRANSFORMERS
 
 
 class TranslationRule(BaseModel):
@@ -24,24 +24,31 @@ class TranslationRule(BaseModel):
 class Translator:
     """Main translator class for converting English to fictional languages."""
     
-    def __init__(self, rules: Dict[str, str] = None):
-        """Initialize the translator.
-        
-        Args:
-            rules: Optional dictionary of special case translations
-        """
-        self.transformer = PhoneticTransformer()
+    def __init__(self):
+        """Initialize the translator with available language transformers."""
+        self.transformers = {
+            name.lower(): transformer_class()
+            for name, transformer_class in LANGUAGE_TRANSFORMERS.items()
+        }
     
-    def translate(self, text: str) -> str:
-        """Translate a full text from English to the fictional language.
+    def translate(self, text: str, language: str) -> str:
+        """Translate a full text from English to the specified fictional language.
         
         Args:
             text: The English text to translate
+            language: The target fictional language
             
         Returns:
             The translated text
+            
+        Raises:
+            ValueError: If the specified language is not supported
         """
-        return self.transformer.transform(text)
+        language = language.lower()
+        if language not in self.transformers:
+            raise ValueError(f"Unsupported language: {language}")
+            
+        return self.transformers[language].transform(text)
 
 
 # Special case translations are now handled by the transformer

@@ -1,7 +1,7 @@
 """
-Main entry point for the application.
+Main entry point for the translation application.
 """
-from .cli import cli
+from .gui import main
 
-if __name__ == '__main__':
-    cli() 
+if __name__ == "__main__":
+    main() 
