@@ -16,97 +16,89 @@ class CyberneticTransformer(BaseTransformer):
         """Initialize the Cybernetic transformer."""
         # Binary and hex mappings
         self.consonant_mappings = {
-            'b': ['1010', '0xA', 'β'],
-            'c': ['1100', '0xC', 'ψ'],
-            'd': ['1101', '0xD', 'δ'],
-            'f': ['1111', '0xF', 'φ'],
-            'g': ['0111', '0x7', 'γ'],
-            'h': ['1000', '0x8', 'η'],
-            'j': ['1010', '0xA', 'θ'],
-            'k': ['1011', '0xB', 'κ'],
-            'l': ['1100', '0xC', 'λ'],
-            'm': ['1101', '0xD', 'μ'],
-            'n': ['1110', '0xE', 'ν'],
-            'p': ['1111', '0xF', 'π'],
-            'q': ['0001', '0x1', 'χ'],
-            'r': ['0010', '0x2', 'ρ'],
-            's': ['0011', '0x3', 'σ'],
-            't': ['0100', '0x4', 'τ'],
-            'v': ['0101', '0x5', 'υ'],
-            'w': ['0110', '0x6', 'ω'],
-            'x': ['0111', '0x7', 'ξ'],
-            'y': ['1000', '0x8', 'ψ'],
-            'z': ['1001', '0x9', 'ζ'],
+            'b': '0b01',
+            'c': '0c10',
+            'd': '0d11',
+            'f': '0f00',
+            'g': '0g01',
+            'h': '0h10',
+            'j': '0j11',
+            'k': '0k00',
+            'l': '0l01',
+            'm': '0m10',
+            'n': '0n11',
+            'p': '0p00',
+            'q': '0q01',
+            'r': '0r10',
+            's': '0s11',
+            't': '0t00',
+            'v': '0v01',
+            'w': '0w10',
+            'x': '0x11',
+            'y': '0y00',
+            'z': '0z01',
         }
 
         # Vowel mappings with circuit symbols
         self.vowel_mappings = {
-            'a': ['1010', '⚡', 'α'],
-            'e': ['1110', '⚢', 'ε'],
-            'i': ['1001', '⚣', 'ι'],
-            'o': ['1111', '⚤', 'ο'],
-            'u': ['1011', '⚥', 'υ'],
+            'a': '1a01',
+            'e': '1e10',
+            'i': '1i11',
+            'o': '1o00',
+            'u': '1u01',
         }
 
-        # Circuit prefixes
-        self.prefixes = [
-            '0x', '0b', '0o', '0d',
-            '⚡', '⚢', '⚣', '⚤', '⚥',
-            '⟺', '⟹', '⟸', '⟷'
-        ]
-
-        # Binary suffixes
-        self.suffixes = [
-            '01', '10', '11', '00',
-            '0x', '0b', '0o', '0d',
-            '⟺', '⟹', '⟸', '⟷'
-        ]
-
-        # Circuit symbols between words
-        self.word_symbols = [
-            '⟺', '⟹', '⟸', '⟷',
-            '⚡', '⚢', '⚣', '⚤', '⚥',
-            '0x', '0b', '0o', '0d'
-        ]
+        # Add uppercase mappings
+        self.consonant_mappings.update({k.upper(): v.upper() for k, v in self.consonant_mappings.items()})
+        self.vowel_mappings.update({k.upper(): v.upper() for k, v in self.vowel_mappings.items()})
 
     def transform(self, text: str) -> str:
-        """Transform text into Cybernetic."""
-        result = text.lower()
+        """Transform text into Cybernetic.
+        
+        Args:
+            text: The input text to transform.
+            
+        Returns:
+            The transformed text in Cybernetic language.
+        """
+        if not text:
+            return ""
+            
+        result = text
         
         # Apply consonant mappings
-        for eng, cyb in self.consonant_mappings.items():
-            result = result.replace(eng, random.choice(cyb))
+        for eng, cyb in sorted(self.consonant_mappings.items(), key=lambda x: len(x[0]), reverse=True):
+            result = result.replace(eng, cyb)
             
         # Apply vowel mappings
-        for eng, cyb in self.vowel_mappings.items():
-            result = result.replace(eng, random.choice(cyb))
-            
-        # Add random prefix and suffix
-        if result:
-            result = random.choice(self.prefixes) + result + random.choice(self.suffixes)
+        for eng, cyb in sorted(self.vowel_mappings.items(), key=lambda x: len(x[0]), reverse=True):
+            result = result.replace(eng, cyb)
             
         return result
 
     def reverse_transform(self, text: str) -> str:
-        """Transform Cybernetic text back to English."""
-        result = text.lower()
+        """Transform Cybernetic text back to English.
         
-        # Remove prefixes and suffixes
-        for prefix in self.prefixes:
-            if result.startswith(prefix):
-                result = result[len(prefix):]
-        for suffix in self.suffixes:
-            if result.endswith(suffix):
-                result = result[:-len(suffix)]
-                
-        # Reverse consonant mappings
-        for eng, cyb_list in self.consonant_mappings.items():
-            for cyb in cyb_list:
-                result = result.replace(cyb, eng)
-                
-        # Reverse vowel mappings
-        for eng, cyb_list in self.vowel_mappings.items():
-            for cyb in cyb_list:
-                result = result.replace(cyb, eng)
-                
+        Args:
+            text: The Cybernetic text to transform back.
+            
+        Returns:
+            The original English text.
+        """
+        if not text:
+            return ""
+            
+        result = text
+        
+        # Create reverse mappings
+        reverse_consonants = {v: k for k, v in self.consonant_mappings.items()}
+        reverse_vowels = {v: k for k, v in self.vowel_mappings.items()}
+        
+        # Combine all reverse mappings
+        reverse_map = {**reverse_consonants, **reverse_vowels}
+        
+        # Apply reverse mappings
+        for cyb, eng in sorted(reverse_map.items(), key=lambda x: len(x[0]), reverse=True):
+            result = result.replace(cyb, eng)
+            
         return result 

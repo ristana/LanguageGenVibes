@@ -2,6 +2,7 @@
 from typing import Dict, List
 import sys
 import os
+from pathlib import Path
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -20,6 +21,23 @@ from PyQt6.QtGui import QTextCursor, QPalette, QColor, QBrush, QPixmap
 from .translator import Translator
 from .languages import get_available_languages
 
+def get_asset_path(relative_path: str) -> str:
+    """Get the correct path to an asset file that works both in development and when packaged.
+    
+    Args:
+        relative_path: The path to the asset relative to the assets directory
+        
+    Returns:
+        The absolute path to the asset file
+    """
+    if getattr(sys, 'frozen', False):
+        # Running in a bundle (executable)
+        base_path = sys._MEIPASS
+    else:
+        # Running in development
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
+    return os.path.join(base_path, 'assets', relative_path)
 
 class TranslationWindow(QMainWindow):
     """Main window for the translation application."""
@@ -53,24 +71,28 @@ class TranslationWindow(QMainWindow):
         lang_label = QLabel("Select Language:")
         lang_label.setStyleSheet("color: white; font-weight: bold;")
         self.lang_combo = QComboBox()
-        self.lang_combo.setStyleSheet("""
-            QComboBox {
+        
+        # Get the correct path for the dropdown arrow
+        dropdown_arrow_path = get_asset_path('dropdown-arrow.svg')
+        
+        self.lang_combo.setStyleSheet(f"""
+            QComboBox {{
                 background-color: #D3D3D3;
                 border: 1px solid #A9A9A9;
                 border-radius: 3px;
                 padding: 5px;
-            }
-            QComboBox:hover {
+            }}
+            QComboBox:hover {{
                 background-color: #E8E8E8;
-            }
-            QComboBox::drop-down {
+            }}
+            QComboBox::drop-down {{
                 border: none;
-            }
-            QComboBox::down-arrow {
-                image: url(assets/icon.ico);
+            }}
+            QComboBox::down-arrow {{
+                image: url({dropdown_arrow_path});
                 width: 12px;
                 height: 12px;
-            }
+            }}
         """)
         
         # Capitalize language names for display
@@ -134,18 +156,22 @@ class TranslationWindow(QMainWindow):
         
         self.translate_btn = QPushButton("Translate")
         self.translate_btn.setStyleSheet(button_style)
+        self.untranslate_btn = QPushButton("Untranslate")
+        self.untranslate_btn.setStyleSheet(button_style)
         self.copy_btn = QPushButton("Copy History")
         self.copy_btn.setStyleSheet(button_style)
         self.clear_btn = QPushButton("Clear")
         self.clear_btn.setStyleSheet(button_style)
         
         button_layout.addWidget(self.translate_btn)
+        button_layout.addWidget(self.untranslate_btn)
         button_layout.addWidget(self.copy_btn)
         button_layout.addWidget(self.clear_btn)
         layout.addLayout(button_layout)
         
         # Connect signals
         self.translate_btn.clicked.connect(self.translate_text)
+        self.untranslate_btn.clicked.connect(self.untranslate_text)
         self.copy_btn.clicked.connect(self.copy_history)
         self.clear_btn.clicked.connect(self.clear_all)
         self.lang_combo.currentTextChanged.connect(self.update_background)
@@ -160,7 +186,7 @@ class TranslationWindow(QMainWindow):
         """Update the background texture based on the selected language."""
         language = language.lower()
         if language in self.textures:
-            texture_path = os.path.join('assets', self.textures[language])
+            texture_path = get_asset_path(self.textures[language])
             if os.path.exists(texture_path):
                 pixmap = QPixmap(texture_path)
                 # Scale the pixmap to fit the window while maintaining aspect ratio
@@ -219,13 +245,53 @@ class TranslationWindow(QMainWindow):
                 f"An error occurred during translation: {str(e)}"
             )
 
+    def untranslate_text(self) -> None:
+        """Convert the translated text back to English."""
+        input_text = self.input_text.toPlainText().strip()
+        if not input_text:
+            QMessageBox.information(
+                self,
+                "Untranslation",
+                "Please enter some translated text to convert back to English."
+            )
+            return
+            
+        try:
+            selected_lang = self.lang_combo.currentText().lower()
+            original_text = self.translator.reverse_translate(input_text, selected_lang)
+            
+            # Add to chat history
+            self.chat_history.append({
+                "original": original_text,
+                "translated": input_text,
+                "language": selected_lang.title(),
+                "is_reverse": True
+            })
+            
+            # Update history display
+            self.update_history_display()
+            
+            # Clear input
+            self.input_text.clear()
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Untranslation Error",
+                f"An error occurred during untranslation: {str(e)}"
+            )
+
     def update_history_display(self) -> None:
         """Update the chat history display."""
         history_text = ""
         for entry in self.chat_history:
             history_text += f"[{entry['language']}]\n"
-            history_text += f"Original: {entry['original']}\n"
-            history_text += f"Translated: {entry['translated']}\n"
+            if entry.get('is_reverse', False):
+                history_text += f"Translated: {entry['translated']}\n"
+                history_text += f"Original: {entry['original']}\n"
+            else:
+                history_text += f"Original: {entry['original']}\n"
+                history_text += f"Translated: {entry['translated']}\n"
             history_text += "-" * 50 + "\n"
         
         self.history_text.setText(history_text)

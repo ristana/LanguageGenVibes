@@ -50,6 +50,25 @@ class Translator:
             
         return self.transformers[language].transform(text)
 
+    def reverse_translate(self, text: str, language: str) -> str:
+        """Convert text from a fictional language back to English.
+        
+        Args:
+            text: The text in the fictional language to convert back
+            language: The source fictional language
+            
+        Returns:
+            The original English text
+            
+        Raises:
+            ValueError: If the specified language is not supported
+        """
+        language = language.lower()
+        if language not in self.transformers:
+            raise ValueError(f"Unsupported language: {language}")
+            
+        return self.transformers[language].reverse_transform(text)
+
 
 # Special case translations are now handled by the transformer
 DEFAULT_RULES = {} 

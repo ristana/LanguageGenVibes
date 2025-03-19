@@ -190,6 +190,52 @@ To add styling for a new language:
 5. Ensure all tests pass
 6. Submit a pull request
 
+## Building the Executable
+
+You can run the application in two modes:
+
+### Development Mode
+Run the application directly with Python for development and debugging:
+```bash
+python -m src
+```
+
+This mode provides:
+- Real-time error messages
+- Easy debugging
+- Quick testing of changes
+- Access to all development tools
+
+### Executable Mode
+Create a standalone executable for distribution:
+
+1. Ensure all dependencies are installed:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Run the build script:
+   ```bash
+   python build.py
+   ```
+
+3. Find the executable in the `dist` directory:
+   - Windows: `dist/FictionalTranslator.exe`
+   - macOS: `dist/FictionalTranslator`
+   - Linux: `dist/FictionalTranslator`
+
+The executable includes:
+- All required dependencies
+- Background textures and assets
+- Full GUI functionality
+- No Python installation required
+
+Notes:
+- The executable is a single file that can be shared with users
+- Background textures will work correctly from the executable
+- Tests can still be run normally using `pytest tests/`
+- Development mode remains fully functional after building
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details. 

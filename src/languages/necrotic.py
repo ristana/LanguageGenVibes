@@ -16,95 +16,92 @@ class NecroticTransformer(BaseTransformer):
         """Initialize the Necrotic transformer."""
         # Necrotic consonant mappings with decayed patterns
         self.consonant_mappings = {
-            'b': ['ɓ', 'ɓ̥', 'ɓ̬'],
-            'c': ['ç', 'ç̥', 'ç̬'],
-            'd': ['ɗ', 'ɗ̥', 'ɗ̬'],
-            'f': ['ɸ', 'ɸ̥', 'ɸ̬'],
-            'g': ['ɠ', 'ɠ̥', 'ɠ̬'],
-            'h': ['ɦ', 'ɦ̥', 'ɦ̬'],
-            'j': ['ʝ', 'ʝ̥', 'ʝ̬'],
-            'k': ['ʞ', 'ʞ̥', 'ʞ̬'],
-            'l': ['ɬ', 'ɬ̥', 'ɬ̬'],
-            'm': ['ɱ', 'ɱ̥', 'ɱ̬'],
-            'n': ['ɳ', 'ɳ̥', 'ɳ̬'],
-            'p': ['ɸ', 'ɸ̥', 'ɸ̬'],
-            'q': ['ʠ', 'ʠ̥', 'ʠ̬'],
-            'r': ['ɽ', 'ɽ̥', 'ɽ̬'],
-            's': ['ʂ', 'ʂ̥', 'ʂ̬'],
-            't': ['ʈ', 'ʈ̥', 'ʈ̬'],
-            'v': ['ʋ', 'ʋ̥', 'ʋ̬'],
-            'w': ['ʍ', 'ʍ̥', 'ʍ̬'],
-            'x': ['χ', 'χ̥', 'χ̬'],
-            'y': ['ʎ', 'ʎ̥', 'ʎ̬'],
-            'z': ['ʐ', 'ʐ̥', 'ʐ̬'],
+            'b': 'ɓ',
+            'c': 'ç',
+            'd': 'ɗ',
+            'f': 'ɸ',
+            'g': 'ɠ',
+            'h': 'ɦ',
+            'j': 'ʝ',
+            'k': 'ʞ',
+            'l': 'ɬ',
+            'm': 'ɱ',
+            'n': 'ɳ',
+            'p': 'ƥ',
+            'q': 'ʠ',
+            'r': 'ɽ',
+            's': 'ʂ',
+            't': 'ʈ',
+            'v': 'ʋ',
+            'w': 'ʍ',
+            'x': 'χ',
+            'y': 'ʎ',
+            'z': 'ʐ',
         }
 
         # Necrotic vowel mappings with elongated patterns
         self.vowel_mappings = {
-            'a': ['ɑ', 'ɑ̥', 'ɑ̬'],
-            'e': ['ɘ', 'ɘ̥', 'ɘ̬'],
-            'i': ['ɨ', 'ɨ̥', 'ɨ̬'],
-            'o': ['ɤ', 'ɤ̥', 'ɤ̬'],
-            'u': ['ʉ', 'ʉ̥', 'ʉ̬'],
+            'a': 'ɑ',
+            'e': 'ɘ',
+            'i': 'ɨ',
+            'o': 'ɤ',
+            'u': 'ʉ',
         }
 
-        # Necrotic prefixes with decayed patterns
-        self.prefixes = [
-            'ɓ̥', 'ɗ̥', 'ɠ̥', 'ʞ̥',
-            'ɬ̥', 'ɱ̥', 'ɳ̥', 'ɸ̥',
-            'ʠ̥', 'ɽ̥', 'ʂ̥', 'ʈ̥'
-        ]
+        # Add uppercase mappings
+        self.consonant_mappings.update({k.upper(): v.upper() for k, v in self.consonant_mappings.items()})
+        self.vowel_mappings.update({k.upper(): v.upper() for k, v in self.vowel_mappings.items()})
 
-        # Necrotic suffixes with decayed patterns
-        self.suffixes = [
-            'ɓ̥', 'ɗ̥', 'ɠ̥', 'ʞ̥',
-            'ɬ̥', 'ɱ̥', 'ɳ̥', 'ɸ̥',
-            'ʠ̥', 'ɽ̥', 'ʂ̥', 'ʈ̥'
-        ]
-
-        # Necrotic word separators
-        self.word_symbols = [
-            '̥', '̬', '̩', '̯',
-        ]
+        # Necrotic word separator
+        self.word_separator = '̥'
 
     def transform(self, text: str) -> str:
-        """Transform text into Necrotic."""
-        result = text.lower()
+        """Transform text into Necrotic.
+        
+        Args:
+            text: The input text to transform.
+            
+        Returns:
+            The transformed text in Necrotic language.
+        """
+        if not text:
+            return ""
+            
+        result = text
         
         # Apply consonant mappings
-        for eng, nec in self.consonant_mappings.items():
-            result = result.replace(eng, random.choice(nec))
+        for eng, nec in sorted(self.consonant_mappings.items(), key=lambda x: len(x[0]), reverse=True):
+            result = result.replace(eng, nec)
             
         # Apply vowel mappings
-        for eng, nec in self.vowel_mappings.items():
-            result = result.replace(eng, random.choice(nec))
-            
-        # Add random prefix and suffix
-        if result:
-            result = random.choice(self.prefixes) + result + random.choice(self.suffixes)
+        for eng, nec in sorted(self.vowel_mappings.items(), key=lambda x: len(x[0]), reverse=True):
+            result = result.replace(eng, nec)
             
         return result
 
     def reverse_transform(self, text: str) -> str:
-        """Transform Necrotic text back to English."""
-        result = text.lower()
+        """Transform Necrotic text back to English.
         
-        # Remove prefixes and suffixes
-        for prefix in self.prefixes:
-            if result.startswith(prefix):
-                result = result[len(prefix):]
-        for suffix in self.suffixes:
-            if result.endswith(suffix):
-                result = result[:-len(suffix)]
-                
-        # Reverse consonant mappings
-        for eng, nec_list in self.consonant_mappings.items():
-            for nec in nec_list:
-                result = result.replace(nec, eng)
-                
-        # Reverse vowel mappings
-        for eng, nec_list in self.vowel_mappings.items():
-            for nec in nec_list:
-                result = result.replace(nec, eng)
-                
+        Args:
+            text: The Necrotic text to transform back.
+            
+        Returns:
+            The original English text.
+        """
+        if not text:
+            return ""
+            
+        result = text
+        
+        # Create reverse mappings
+        reverse_consonants = {v: k for k, v in self.consonant_mappings.items()}
+        reverse_vowels = {v: k for k, v in self.vowel_mappings.items()}
+        
+        # Combine all reverse mappings
+        reverse_map = {**reverse_consonants, **reverse_vowels}
+        
+        # Apply reverse mappings
+        for nec, eng in sorted(reverse_map.items(), key=lambda x: len(x[0]), reverse=True):
+            result = result.replace(nec, eng)
+            
         return result 
